@@ -3,6 +3,7 @@ const authController = require('../controllers/auth_controller');
 
 
 router.get('/', authController.getUsers);
+router.post('/verify', authController.verifyToken);
 router.post('/register', authController.postRegister);
 router.post('/login', authController.postLogin);
 

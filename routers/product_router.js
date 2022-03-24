@@ -7,8 +7,11 @@ router.post('/', productController.addProduct);
 
 router.get('/updated', productController.getUpdated);
 router.get('/trends', productController.getOnTrending);
-
 router.get('/:productId', productController.getProduct);
+
+
+router.get('/wishList/:userId', productController.getWishList);
+router.post('/wishList/add-product', productController.wishListAddProduct);
 
 
 

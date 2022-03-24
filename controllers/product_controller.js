@@ -1,5 +1,7 @@
 const Product = require('../models/product');
 const mongoose = require('mongoose');
+const User = require('../models/user');
+const { StatusCodes } = require('http-status-codes');
 
 module.exports.getAllProducts = async (req, res, next) => {
     try {
@@ -84,6 +86,43 @@ module.exports.getUpdated = async (req, res, next) => {
         const typeId = req.query.typeId;
         const products = await Product.find({ type: mongoose.Types.ObjectId(typeId) }).populate('category').sort({ 'createdAt': -1 }).limit(5);
         res.send(products);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+module.exports.getWishList = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const wishList = await Product.find({
+            _id: {
+                $in: user.wishList
+            }
+        }).populate('category');
+        res.send(wishList);
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+module.exports.wishListAddProduct = async (req, res, next) => {
+    try {
+        console.log('ss');
+        const user = await User.findById(req.body.userId);
+        if (user) {
+            const _wishList = user.wishList;
+            const result = _wishList.indexOf(req.body.productId);
+            if (result >= 0) {
+                _wishList.splice(result, 1);
+            } else {
+                _wishList.push(req.body.productId);
+            }
+            user.wishList = _wishList;
+            user.save();
+            res.status(StatusCodes.OK).send(user);
+        }
+        res.send();
     } catch (error) {
         console.log(error);
     }

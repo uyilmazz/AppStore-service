@@ -8,7 +8,7 @@ module.exports.getUsers = async (req, res, next) => {
         const users = await User.find();
         res.send(users);
     } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        console.log(error);
     }
 }
 
@@ -33,8 +33,8 @@ module.exports.postRegister = async (req, res, next) => {
             res.status(StatusCodes.CREATED).send(_user);
         }
     } catch (error) {
-        // res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
-        res.send();
+        console.log(error);
+
     }
 }
 
@@ -49,7 +49,25 @@ module.exports.postLogin = async (req, res, next) => {
             res.send({ message: 'email or password are wrong!' });
         }
     } catch (error) {
-        console.log('sss');
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        console.log(error);
+
+    }
+}
+
+module.exports.verifyToken = async (req, res, next) => {
+    try {
+
+        const token = req.body.token;
+        if (!token) res.send();
+
+
+        const _email = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const _user = await User.findOne({ email: _email });
+        if (!_user) res.send();
+        res.status(StatusCodes.ACCEPTED).send(_user);
+
+    } catch (error) {
+        console.log(error);
+
     }
 }
