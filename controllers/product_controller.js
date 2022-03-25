@@ -12,7 +12,10 @@ module.exports.getAllProducts = async (req, res, next) => {
         if (producer) query.producer = producer;
         const category = req.query.category;
         if (category) query.category = { $in: mongoose.Types.ObjectId(category) };
+        const search = req.query.search;
+        if (search) query.name = { '$regex': '.*' + search + '.*', '$options': 'i' };
         const products = await Product.find(query).populate('category');
+        console.log(products);
         res.send(products);
     } catch (error) {
         console.log(error);
@@ -62,9 +65,7 @@ module.exports.getProductsByCategoryId = async (req, res, next) => {
                 $in: mongoose.Types.ObjectId(categoryId)
             }
         }).populate('category');
-
         res.send(products);
-
     } catch (error) {
         console.log(error);
     }
