@@ -15,7 +15,6 @@ module.exports.getAllProducts = async (req, res, next) => {
         const search = req.query.search;
         if (search) query.name = { '$regex': '.*' + search + '.*', '$options': 'i' };
         const products = await Product.find(query).populate('category');
-        console.log(products);
         res.send(products);
     } catch (error) {
         console.log(error);
@@ -109,7 +108,6 @@ module.exports.getWishList = async (req, res, next) => {
 
 module.exports.wishListAddProduct = async (req, res, next) => {
     try {
-        console.log('ss');
         const user = await User.findById(req.body.userId);
         if (user) {
             const _wishList = user.wishList;

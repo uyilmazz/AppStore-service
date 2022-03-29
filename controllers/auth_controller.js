@@ -58,13 +58,14 @@ module.exports.verifyToken = async (req, res, next) => {
     try {
 
         const token = req.body.token;
-        if (!token) res.send();
-
-
-        const _email = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        const _user = await User.findOne({ email: _email });
-        if (!_user) res.send();
-        res.status(StatusCodes.ACCEPTED).send(_user);
+        if (!token) {
+            res.send();
+        } else {
+            const _email = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            const _user = await User.findOne({ email: _email });
+            if (!_user) res.send();
+            res.status(StatusCodes.ACCEPTED).send(_user);
+        }
 
     } catch (error) {
         console.log(error);

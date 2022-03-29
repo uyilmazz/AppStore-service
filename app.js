@@ -15,8 +15,6 @@ const categoryRouter = require('./routers/category_router');
 const producerRouter = require('./routers/producer_router');
 const userRouter = require('./routers/user_router');
 
-
-
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/types', typeRouter);
